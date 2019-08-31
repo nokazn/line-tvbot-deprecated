@@ -1,3 +1,5 @@
+'use strict'
+
 const line = require('@line/bot-sdk');
 require('dotenv').config();
 
