@@ -1,18 +1,23 @@
-const axios = require('axios')
-const { JSDOM } = require('jsdom')
-const moment = require('moment')
+'use strict'
+
+const axios = require('axios');
+const { JSDOM } = require('jsdom');
+const moment = require('moment');
 
 function getPrograms (searchWords, type, start) {
   return new Promise((resolve, reject) => {
     const baseUrl = 'https://tv.yahoo.co.jp/';
+    searchWords = encodeURIComponent(searchWords.replace(/\s/g, '+'));
+    type = type.split('').join('+');
+    start = start.toString();
+    const url = `${baseUrl}search/?q=${searchWords}&t=${type}&s=${start}`;
     const tomorrow = Number(moment().add(1, 'd').format('MDD'));
     const programList = [];
 
-    const url = `${baseUrl}search/?q=${encodeURIComponent(searchWords)}&t=${type}&s=${start}`;
     axios.get(url).then(res => {
       const document = new JSDOM(res.data).window.document;
       const eleList = Array.from(document.querySelectorAll('.programlist li'));
-      for (ele of eleList) {
+      for (let ele of eleList) {
         const leftarea = ele.getElementsByClassName('leftarea')[0];
         const rightarea = ele.getElementsByClassName('rightarea')[0];
 
@@ -24,8 +29,7 @@ function getPrograms (searchWords, type, start) {
         const detail = rightarea.children[2].textContent;
         programList.push({ date, time, name, broadcaster, detail });
       }
-      console.log(programList);
-      console.log(programList.length);
+      // console.log(programList);
       resolve(programList);
     }).catch(err => {
       console.error(err);
@@ -33,3 +37,5 @@ function getPrograms (searchWords, type, start) {
     })
   })
 }
+
+module.exports.getPrograms = getPrograms;
