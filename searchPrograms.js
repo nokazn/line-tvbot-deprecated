@@ -4,7 +4,8 @@ const { getPrograms } = require('./getPrograms.js');
 
 async function searchPrograms (searchWords, type, callback) {
   let programList = [];
-  while (programList.length < 50) {
+  const max = 5;
+  while (programList.length < max) {
     let programs = await getPrograms(searchWords, type, programList.length + 1);
     programList = [...programList, ...programs];
     if (programs.length < 10) break;
@@ -24,4 +25,4 @@ function sleep (time) {
   });
 }
 
-module.export = searchPrograms;
+module.exports = { searchPrograms, sleep };

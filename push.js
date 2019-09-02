@@ -15,7 +15,6 @@ function pushMessage (msg) {
   };
 
   client.pushMessage(process.env.USER_ID, message).then((res) => {
-    console.log(res)
     console.table(res)
   }).catch((err) => {
     console.error(err)
