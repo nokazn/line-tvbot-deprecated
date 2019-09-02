@@ -4,11 +4,11 @@ const axios = require('axios');
 const { JSDOM } = require('jsdom');
 const moment = require('moment');
 
-function getPrograms (searchWords, type, start) {
+function getPrograms (searchWords, type = 123, start = 0) {
   return new Promise((resolve, reject) => {
     const baseUrl = 'https://tv.yahoo.co.jp/';
     searchWords = encodeURIComponent(searchWords.replace(/\s/g, '+'));
-    type = type.split('').join('+');
+    type = type.toString().split('').join('+');
     start = start.toString();
     const url = `${baseUrl}search/?q=${searchWords}&t=${type}&s=${start}`;
     const tomorrow = Number(moment().add(1, 'd').format('MDD'));
