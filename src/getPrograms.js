@@ -7,7 +7,7 @@ const moment = require('moment');
 function getPrograms (searchWords, type = 123, start = 0) {
   return new Promise((resolve, reject) => {
     const baseUrl = 'https://tv.yahoo.co.jp/';
-    searchWords = encodeURIComponent(searchWords.replace(/\s/g, '+'));
+    searchWords = searchWords.split(/\s/g).map(word => encodeURIComponent(word)).join('+');
     type = type.toString().split('').join('+');
     start = start.toString();
     const url = `${baseUrl}search/?q=${searchWords}&t=${type}&s=${start}`;

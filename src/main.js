@@ -34,7 +34,7 @@ const rmJSports4 = programList => programList.filter(program => !program.boradca
   await notifyPrograms('金曜ロードSHOW', 3)
   await notifyPrograms('プレミアムシネマ', 3)
 
-  notifyPrograms('エヴァンゲリオン', 123)
+  await notifyPrograms('エヴァンゲリオン', 123)
 })();
 
 async function notifyPrograms (searchWords, type) {
