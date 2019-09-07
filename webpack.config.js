@@ -6,7 +6,7 @@ module.exports = {
   entry: './src/main.js',
   output: {
     path: path.resolve(__dirname),
-    filename: 'line-tvbot.js',
+    filename: 'index.js',
     libraryTarget: 'umd'
   },
   resolve: {

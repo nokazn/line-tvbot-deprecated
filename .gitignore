@@ -1,4 +1,4 @@
 /node_modules/*
 /src/.env
 /dist.zip
-/line-tvbot.js
+/index.js

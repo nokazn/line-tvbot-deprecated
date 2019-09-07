@@ -6,7 +6,7 @@ const { searchPrograms, sleep } = require('./searchPrograms.js');
 const rmReair = programList => programList.filter(program => !program.detail.includes('再放送'));
 const rmJSports4 = programList => programList.filter(program => !program.boradcaster.includes('J SPORTS 4'));
 
-(async function main () {
+exports.handler = async (event, context, callback) => {
   await notifyPrograms('F1 LEGENDS', 2);
   await notifyPrograms('F1 グランプリ フジテレビ', 12, rmReair);
   await notifyPrograms('フォーミュラE選手権', 12, rmJSports4);
@@ -35,7 +35,7 @@ const rmJSports4 = programList => programList.filter(program => !program.boradca
   await notifyPrograms('プレミアムシネマ', 3)
 
   await notifyPrograms('エヴァンゲリオン', 123)
-})();
+};
 
 async function notifyPrograms (searchWords, type) {
   const programList = await searchPrograms(searchWords, type);
