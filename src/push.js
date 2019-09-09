@@ -1,6 +1,7 @@
 'use strict'
 
 const line = require('@line/bot-sdk');
+const path = require('path');
 const dotenvConfig = require('dotenv').config();
 
 function pushMessage (msg) {

@@ -1,4 +1,6 @@
 /node_modules/*
 /src/.env
+/.env
+/dist/*
 /dist.zip
 /index.js
