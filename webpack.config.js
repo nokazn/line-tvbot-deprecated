@@ -6,18 +6,13 @@ module.exports = {
   entry: './src/main.js',
   output: {
     path: path.resolve(__dirname),
-    filename: 'index.js',
+    filename: './dist/index.js',
     libraryTarget: 'umd'
   },
   resolve: {
     extensions: ['.js']
   },
-  module: {
-    rules: [
-      {
-        test: /\.node$/,
-        use: 'node-loader'
-      }
-    ]
-  }
+  externals: {
+    canvas: 'commonjs canvas'
+  },
 }
