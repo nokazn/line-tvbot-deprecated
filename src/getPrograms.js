@@ -3,8 +3,8 @@
 /**
  * searchWords に合致するテレビ番組の情報を取得
  * @param {string} searchWords
- * @param {number} type
- * @param {number} start
+ * @param {string} type
+ * @param {string} start
  * @return {Primise<?object[]>}
  */
 module.exports = (searchWords, type = 123, start = 0) => {
@@ -13,11 +13,7 @@ module.exports = (searchWords, type = 123, start = 0) => {
   const moment = require('moment');
 
   return new Promise((resolve, reject) => {
-    const baseUrl = 'https://tv.yahoo.co.jp/';
-    searchWords = searchWords.split(/\s/g).map(word => encodeURIComponent(word)).join('+');
-    type = type.toString().split('').join('+');
-    start = start.toString();
-    const url = `${baseUrl}search/?q=${searchWords}&t=${type}&s=${start}`;
+    const url = `https://tv.yahoo.co.jp/search/?q=${searchWords}&t=${type}&s=${start}`;
     const tomorrow = Number(moment().add(1, 'd').format('MDD'));
     const programList = [];
 

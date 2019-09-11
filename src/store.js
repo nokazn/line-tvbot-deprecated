@@ -36,4 +36,6 @@ const searchWordsList = [
   ['エヴァンゲリオン', 123],
 ];
 
-module.exports = { NGWordsList, searchWordsList };
+const max = 20;
+
+module.exports = { NGWordsList, searchWordsList, max };
