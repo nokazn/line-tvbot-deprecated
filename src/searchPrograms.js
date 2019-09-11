@@ -1,13 +1,14 @@
 'use strict'
 
-const { getPrograms } = require('./getPrograms.js');
-
 /**
  * searchWords に合致するテレビ番組の情報を複数ページから取得
  * @param {string} searchWords
  * @param {number} type
  */
-async function searchPrograms (searchWords, type) {
+module.exports = async (searchWords, type) => {
+  const getPrograms = require('./getPrograms.js');
+  const sleep = require('./sleep.js');
+
   let allProgramList = [];
   const max = 20;
   while (allProgramList.length < max) {
@@ -18,18 +19,3 @@ async function searchPrograms (searchWords, type) {
   }
   return allProgramList;
 }
-
-/**
- * time ms だけ待機
- * @param {number} time
- * @return {Promise}
- */
-function sleep (time) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve();
-    }, time);
-  });
-}
-
-module.exports = { searchPrograms, sleep };

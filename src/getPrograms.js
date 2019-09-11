@@ -1,9 +1,5 @@
 'use strict'
 
-const axios = require('axios');
-const { JSDOM } = require('jsdom');
-const moment = require('moment');
-
 /**
  * searchWords に合致するテレビ番組の情報を取得
  * @param {string} searchWords
@@ -11,7 +7,11 @@ const moment = require('moment');
  * @param {number} start
  * @return {Primise<?object[]>}
  */
-function getPrograms (searchWords, type = 123, start = 0) {
+module.exports = (searchWords, type = 123, start = 0) => {
+  const axios = require('axios');
+  const { JSDOM } = require('jsdom');
+  const moment = require('moment');
+
   return new Promise((resolve, reject) => {
     const baseUrl = 'https://tv.yahoo.co.jp/';
     searchWords = searchWords.split(/\s/g).map(word => encodeURIComponent(word)).join('+');
@@ -62,7 +62,7 @@ function getPrograms (searchWords, type = 123, start = 0) {
  * @return {boolean}
  */
 function isNGPrograms (obj) {
-  const NGWordsList = require('./store.js');
+  const { NGWordsList } = require('./store.js');
   for (let NGWords of NGWordsList) {
     let hasNGWords = Object.entries(NGWords).every(([key, words]) => {
       return words.every(word => obj[key].includes(word));
@@ -71,5 +71,3 @@ function isNGPrograms (obj) {
   }
   return false;
 }
-
-module.exports.getPrograms = getPrograms;

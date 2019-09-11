@@ -1,14 +1,14 @@
 'use strict'
 
-const line = require('@line/bot-sdk');
-const dotenvConfig = require('dotenv').config();
-
 /**
  * msg をプッシュ通知
  * @param {string} msg
  * @return {Promise<{statusCode: number, response: string}>}
  */
-async function pushMessage (msg) {
+module.exports = async msg => {
+  const line = require('@line/bot-sdk');
+  const dotenvConfig = require('dotenv').config();
+
   return new Promise((resolve, reject) => {
     if (typeof process.env.CHANNEL_ACCESS_TOKEN === 'undefined') {
       console.error(dotenvConfig);
@@ -38,5 +38,3 @@ async function pushMessage (msg) {
     });
   });
 };
-
-module.exports.pushMessage = pushMessage;
