@@ -8,11 +8,14 @@
 module.exports = async (searchWords, type) => {
   const getPrograms = require('./getPrograms.js');
   const sleep = require('./sleep.js');
+  const { max } = require('./store.js');
 
+  searchWords = searchWords.split(/\s/g).map(word => encodeURIComponent(word)).join('+');
+  type = String(type).split('').join('+');
   let allProgramList = [];
-  const max = 20;
   while (allProgramList.length < max) {
-    let programs = await getPrograms(searchWords, type, allProgramList.length + 1);
+    let start = String(allProgramList.length + 1);
+    let programs = await getPrograms(searchWords, type, start);
     allProgramList = [...allProgramList, ...programs];
     if (programs.length < 10) break;
     await sleep(2000);
