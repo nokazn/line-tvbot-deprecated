@@ -14,7 +14,6 @@ exports.handler = async (event, context, callback) => {
     await notifyPrograms(...searchWords);
     await sleep(1000);
   }
-  return programList;
 };
 
 /**
@@ -30,7 +29,6 @@ async function notifyPrograms (searchWords, type) {
   const allProgramList = await searchPrograms(searchWords, type);
   if (!allProgramList.length) return null;
   const response = await pushMessage({ searchWords, allProgramList });
-  console.info(response);
-  console.table(allProgramList);
+  console.info({ allProgramList, response });
   return response;
 }
