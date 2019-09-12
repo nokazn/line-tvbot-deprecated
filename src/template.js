@@ -1,4 +1,4 @@
-const carousel = {
+module.exports = {
   type: 'template',
   altText: '',
   template: {
@@ -7,23 +7,4 @@ const carousel = {
     imageAspectRatio: 'rectangle',
     imageSize: 'cover'
   }
-}
-
-const columnTemplate = {
-  title: '',
-  text: '',
-  actions: [
-      {
-        type: 'uri',
-        label: 'Googleカレンダーに追加',
-        uri: ''
-      },
-      {
-        type: 'uri',
-        label: '詳細',
-        uri: ''
-      }
-  ]
-}
-
-module.exports = { carousel, columnTemplate };
+};

@@ -27,17 +27,27 @@ module.exports = async ({ searchWords, allProgramList }) => {
     const countMessage = {
       type: 'text',
       text: counts
-    }
+    };
 
-    const { carousel, columnTemplate } = require('./template.js');
+    const carousel = require('./template.js');
     carousel.altText = counts;
     carousel.template.columns = allProgramList.map(program => {
-      let column = Object.assign({}, columnTemplate);
-      column.title = abbrText(program.name, 40);
-      column.text = abbrText(`${program.date}${program.time}\n${program.broadcaster}\n${program.detail}`, 60);
-      column.actions[0].uri = program.calendarUrl;
-      column.actions[1].uri = program.href;
-      return column;
+      return {
+        title: abbrText(program.name, 40),
+        text: abbrText(`${program.date}${program.time}\n${program.broadcaster}\n${program.detail}`, 60),
+        actions: [
+            {
+              type: 'uri',
+              label: 'Googleカレンダーに追加',
+              uri: program.calendarUrl
+            },
+            {
+              type: 'uri',
+              label: '詳細',
+              uri: program.href
+            }
+        ]
+      };
     });
 
     client.pushMessage(process.env.USER_ID, [countMessage, carousel]).then((res) => {

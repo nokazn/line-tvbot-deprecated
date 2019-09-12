@@ -30,7 +30,7 @@ module.exports = (searchWords, type = '1+2+3', start = '1') => {
         let href = `https://tv.yahoo.co.jp/${rightareas[0].querySelector('a').href}`;
         let broadcaster = rightareas[1].children[0].textContent;
         let detail = rightareas[2].textContent;
-        let calendarUrl = `https://www.google.com/calendar/event?action=TEMPLATE&text=${encodeURIComponent(name)}&details=${encodeURIComponent(detail)}&dates=${parsedDate.calendarTime}`;
+        let calendarUrl = `https://calendar.google.com/calendar/event?action=TEMPLATE&text=${encodeURIComponent(name)}&dates=${encodeURIComponent(parsedDate.calendarTime)}`;
 
         let obj = { date, time, name, href, broadcaster, detail, calendarUrl };
         if (!isNGPrograms(obj)) programList.push(obj);
@@ -57,17 +57,33 @@ module.exports = (searchWords, type = '1+2+3', start = '1') => {
  * @param {string} date - M/D（AAA）形式の日付
  * @param {string} times - H:mm～H:mm 形式の時間
  * @return {mdd: number, calendarTime: string}
+ * @todo YYYY が現在の年になるので年末はバグる
  */
 function parseDate (date, times) {
   const moment = require('moment');
   date = date.replace(/（.）/, '');
   times = times.split('～');
-  const mdd = Number(moment(date).format('MDD'));
-  const start = moment(`${date} ${times[0]}`, 'M/D H:mm').format('YYYYMMDDTHHmm00');
-  const end = moment(`${date} ${times[1]}`, 'M/D H:mm').format('YYYYMMDDTHHmm00');
+  const mdd = Number(moment(date, 'M/D').format('MDD'));
+  const start = calendarTime(date, times[0]);
+  const end = calendarTime(date, times[1]);
   return {
     mdd: mdd,
     calendarTime: `${start}/${end}`
+  };
+
+  /**
+   * 24時以降の時間を修正し、YYYYMMDDYHHmm00 形式にする
+   * @param {string} date - M/D 形式の日付
+   * @param {string} time - H:mm 形式の時間
+   */
+  function calendarTime (date, time) {
+    const moment = require('moment');
+    const hour = Number(time.split(':')[0]);
+    if (hour >= 24) {
+      time = time.replace(/^(2[4-9])|(3[0-9])/, String(hour - 24));
+      date = moment(date, 'M/D').add(1, 'days').format('M/D');
+    }
+    return moment(`${date} ${time}`, 'M/D H:mm').format('YYYYMMDDTHHmm00');
   }
 }
 
