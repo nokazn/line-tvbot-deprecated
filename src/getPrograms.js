@@ -5,9 +5,9 @@
  * @param {string} searchWords
  * @param {string} type
  * @param {string} start
- * @return {Primise<?object[]>}
+ * @return {Primise<?Program[]>}
  */
-module.exports = (searchWords, type = 123, start = 0) => {
+module.exports = (searchWords, type = '1+2+3', start = '1') => {
   const axios = require('axios');
   const { JSDOM } = require('jsdom');
   const moment = require('moment');
@@ -30,6 +30,7 @@ module.exports = (searchWords, type = 123, start = 0) => {
           date: date,
           time: time,
           name: rightareas[0].textContent,
+          href: `https://tv.yahoo.co.jp/${rightareas[0].querySelector('a').href}`,
           broadcaster: rightareas[1].children[0].textContent,
           detail: rightareas[2].textContent,
         }
@@ -37,20 +38,20 @@ module.exports = (searchWords, type = 123, start = 0) => {
       }
       resolve(programList);
     }).catch(err => {
+      console.error('axios で通信する際にエラーが発生しました。 at src/getPrograms.js')
       console.error(err);
+      console.error(JSON.stringify({
+        searchWords,
+        type,
+        start,
+        url,
+        tomorrow
+      }, null, '\t'));
+      console.error()
       reject(null);
     });
   });
 }
-
-/**
- * @typedef {Object} Program
- * @property {string} date
- * @property {string} time
- * @property {string} name
- * @property {string} broadcaster
- * @property {string} detail
- */
 
 /**
  * NG ワードに登録されているか
