@@ -1,9 +1,19 @@
 'use strict'
 
 /**
+ * @tyepdef Program
+ * @property {string} date
+ * @property {string} time
+ * @property {string} name
+ * @property {string} href
+ * @property {string} broadcaster
+ * @property {string} detail
+ */
+/**
  * searchWords に合致するテレビ番組の情報を複数ページから取得
  * @param {string} searchWords
  * @param {number} type
+ * @return {Program[]|null[]} allProgramList
  */
 module.exports = async (searchWords, type) => {
   const getPrograms = require('./getPrograms.js');
@@ -18,7 +28,7 @@ module.exports = async (searchWords, type) => {
     let programs = await getPrograms(searchWords, type, start);
     allProgramList = [...allProgramList, ...programs];
     if (programs.length < 10) break;
-    await sleep(2000);
+    await sleep(1500);
   }
   return allProgramList;
 }
