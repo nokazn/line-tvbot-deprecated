@@ -47,8 +47,6 @@ module.exports = async ({ searchWords, allProgramList }) => {
 };
 
 function makeMsgs (searchWords, allProgramList) {
-  const carouselTemplate = require('./template.js');
-
   const counts = `「${searchWords}」を含む番組が${allProgramList.length}件見つかりました。`;
   const countMsg = {
     type: 'text',
@@ -61,13 +59,18 @@ function makeMsgs (searchWords, allProgramList) {
   }
 
   const carouselsList = [];
-  for (let programList of allProgramLists) {
-    /**
-     * @todo carousel が最後のに上書きされる
-     */
-    let carousel = Object.assign({}, carouselTemplate);
-    carousel.altText = counts;
-    carousel.template.columns = programList.map(program => {
+  for (let [i, programList] of allProgramLists.entries()) {
+    carouselsList.push({
+      type: 'template',
+      altText: counts,
+      template: {
+        type: 'carousel',
+        columns: [],
+        imageAspectRatio: 'rectangle',
+        imageSize: 'cover'
+      }
+    });
+    carouselsList[i].template.columns = programList.map(program => {
       return {
         title: abbrText(program.name, 40),
         text: abbrText(`${program.date}${program.time}\n${program.broadcaster}\n${program.detail}`, 60),
@@ -85,8 +88,6 @@ function makeMsgs (searchWords, allProgramList) {
         ]
       };
     });
-    // return carousel;
-    carouselsList.push(carousel);
   }
   return [countMsg, ...carouselsList];
 }
