@@ -7,14 +7,14 @@ import { Program, MyResponse, Actions, Columns, Carousel } from 'types.d';
  * @return {Promise<Response>}
  */
 export default async function ({ searchWords, allProgramList }: { searchWords: string, allProgramList: Program[]}): Promise<MyResponse> {
-  const dotenvConfig = require('dotenv').config();
+  const config = dotenv.config();
+  if (typeof process.env.CHANNEL_ACCESS_TOKEN === 'undefined') {
+    console.error(config);
+    console.error({ CHANNEL_ACCESS_TOKEN: process.env.CHANNEL_ACCESS_TOKEN });
+    throw new Error('process.env.CHANNEL_ACCESS_TOKEN が設定されていません。');
+  }
 
   return new Promise((resolve, reject) => {
-    if (typeof process.env.CHANNEL_ACCESS_TOKEN === 'undefined') {
-      console.error(dotenvConfig);
-      console.error({ CHANNEL_ACCESS_TOKEN: process.env.CHANNEL_ACCESS_TOKEN });
-      throw new Error('process.env.CHANNEL_ACCESS_TOKEN が設定されていません。');
-    }
     const client = new line.Client({
       channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
     });
