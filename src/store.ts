@@ -1,4 +1,6 @@
-const NGWordsList = [
+import { NGWords, SearchWord } from './types.d';
+
+export const NGWordsList: NGWords[] = [
   {
     name: ['F1'],
     broadcaster: ['フジテレビNEXT'],
@@ -9,7 +11,7 @@ const NGWordsList = [
   }
 ];
 
-const searchWordsList = [
+export const searchWordsList: SearchWord[] = [
   ['F1 LEGENDS', 2],
   ['F1 グランプリ フジテレビ', 12],
   ['フォーミュラE選手権', 12],
@@ -35,6 +37,4 @@ const searchWordsList = [
   ['エヴァンゲリオン', 123],
 ];
 
-const max = 20;
-
-module.exports = { NGWordsList, searchWordsList, max };
+export const max = 20;

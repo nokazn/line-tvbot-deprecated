@@ -1,15 +1,10 @@
-'use strict'
+import { searchWordsList } from './store';
+import sleep from './sleep';
+import pushMessage from './push.js';
+import searchPrograms from './searchPrograms.js';
 
-/**
- * @param {?Object} event
- * @param {?Object} context
- * @param {?Function} callback
- * @return {} callback
- */
+// @ts-ignore
 exports.handler = async (event, context, callback) => {
-  const { searchWordsList } = require('./store.js');
-  const sleep = require('./sleep.js');
-
   for (let searchWords of searchWordsList) {
     await notifyPrograms(...searchWords);
     await sleep(1000);
@@ -18,14 +13,9 @@ exports.handler = async (event, context, callback) => {
 
 /**
  * 検索した番組を通知
- * @param {string} searchWords
- * @param {number} type
  * @return {?Response} response
  */
-async function notifyPrograms (searchWords, type) {
-  const pushMessage = require('./push.js');
-  const searchPrograms  = require('./searchPrograms.js');
-
+async function notifyPrograms (searchWords: string, type: number): Promise<Response | null> {
   const allProgramList = await searchPrograms(searchWords, type);
   if (!allProgramList.length) return null;
   const response = await pushMessage({ searchWords, allProgramList });
