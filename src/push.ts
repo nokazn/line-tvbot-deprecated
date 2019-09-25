@@ -1,6 +1,6 @@
 import line from '@line/bot-sdk';
 import dotenv from 'dotenv';
-import { Program, MyResponse } from 'types.d';
+import { Program, MyResponse, Actions, Columns, Carousel } from 'types.d';
 
 /**
  * @param {Program[]}
@@ -49,35 +49,34 @@ function _makeMsgs (searchWords: string, allProgramList: Program[]) {
     allProgramLists.push(allProgramList.splice(0, 10));
   }
 
-  const carouselsList = [];
+  const carouselsList: Carousel[] = [];
   for (let [i, programList] of Array.from(allProgramLists.entries())) {
     carouselsList.push({
       type: 'template',
       altText: counts,
       template: {
         type: 'carousel',
-        columns: [],
+        columns: programList.map(program => {
+          return {
+            title: abbrText(program.name, 40),
+            text: abbrText(`${program.date}${program.time}\n${program.broadcaster}\n${program.detail}`, 60),
+            actions: [
+              {
+                type: 'uri',
+                label: 'Googleカレンダーに追加',
+                uri: program.calendarUrl
+              },
+              {
+                type: 'uri',
+                label: '詳細',
+                uri: program.href
+              }
+            ]
+          };
+        }),
         imageAspectRatio: 'rectangle',
         imageSize: 'cover'
       }
-    });
-    carouselsList[i].template.columns = programList.map(program => {
-      return {
-        title: abbrText(program.name, 40),
-        text: abbrText(`${program.date}${program.time}\n${program.broadcaster}\n${program.detail}`, 60),
-        actions: [
-          {
-            type: 'uri',
-            label: 'Googleカレンダーに追加',
-            uri: program.calendarUrl
-          },
-          {
-            type: 'uri',
-            label: '詳細',
-            uri: program.href
-          }
-        ]
-      };
     });
   }
   return [countMsg, ...carouselsList];
@@ -86,6 +85,10 @@ function _makeMsgs (searchWords: string, allProgramList: Program[]) {
 /**
  * text の長さが length 以上のときは省略する
  */
-function abbrText(text: string, length: number): string {
-  return text.length >= length ? `${text.substring(0, length - 1)}…` : text;
+function abbrText(text: string | null, length: number): string | null {
+  if (text) {
+    return text.length >= length ? `${text.substring(0, length - 1)}…` : text;
+  } else {
+    return null;
+  }
 }

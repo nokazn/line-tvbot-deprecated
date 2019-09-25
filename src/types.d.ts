@@ -25,3 +25,39 @@ export interface MyResponse {
   statusCode: number;
   response: {};
 }
+
+/**
+ * @todo null check
+ */
+export type Actions = [
+  {
+    type: 'uri';
+    label: 'Googleカレンダーに追加';
+    uri: string | null;
+  },
+  {
+    type: 'uri';
+    label: '詳細';
+    uri: string | null;
+  }
+];
+
+/**
+ * @todo null check
+ */
+export interface Columns {
+  title: string | null;
+  text: string | null;
+  actions: Actions;
+}
+
+export interface Carousel {
+  type: 'template';
+  altText: string;
+  template: {
+    type: 'carousel';
+    columns: Columns[];
+    imageAspectRatio: 'rectangle';
+    imageSize: 'cover';
+  }
+}
