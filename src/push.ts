@@ -1,17 +1,12 @@
-'use strict'
-
-/**
- * @typedef Response
- * @property {number} statusCode
- * @property {Object} response
- */
+import line from '@line/bot-sdk';
+import dotenv from 'dotenv';
+import { Program, MyResponse } from 'types.d';
 
 /**
  * @param {Program[]}
  * @return {Promise<Response>}
  */
-module.exports = async ({ searchWords, allProgramList }) => {
-  const line = require('@line/bot-sdk');
+export default async function ({ searchWords, allProgramList }: { searchWords: string, allProgramList: Program[]}): Promise<MyResponse> {
   const dotenvConfig = require('dotenv').config();
 
   return new Promise((resolve, reject) => {
@@ -24,42 +19,38 @@ module.exports = async ({ searchWords, allProgramList }) => {
       channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
     });
 
-    const msgs = makeMsgs(searchWords, allProgramList);
+    const msgs = _makeMsgs(searchWords, allProgramList);
 
-    client.pushMessage(process.env.USER_ID, msgs).then((res) => {
+    client.pushMessage(process.env.USER_ID, msgs).then((res: ResponseType) => {
       resolve({
         statusCode: 200,
         response: res
       });
-    }).catch((err) => {
-      console.error(err);
-      console.error(JSON.stringify({
-        searchWords,
-        allProgramList,
-        msgs
-      }, null, '\t'));
+    }).catch((e: Error) => {
+      console.error(e);
+      console.error(JSON.stringify({searchWords ,allProgramList ,msgs }, null, '\t'));
       reject({
         statusCode: 400,
-        response: err
+        response: e
       });
     });
   });
 };
 
-function makeMsgs (searchWords, allProgramList) {
+function _makeMsgs (searchWords: string, allProgramList: Program[]) {
   const counts = `「${searchWords}」を含む番組が${allProgramList.length}件見つかりました。`;
   const countMsg = {
     type: 'text',
     text: counts
   };
 
-  const allProgramLists = [];
+  const allProgramLists: Program[][] = [];
   while (allProgramList.length) {
     allProgramLists.push(allProgramList.splice(0, 10));
   }
 
   const carouselsList = [];
-  for (let [i, programList] of allProgramLists.entries()) {
+  for (let [i, programList] of Array.from(allProgramLists.entries())) {
     carouselsList.push({
       type: 'template',
       altText: counts,
@@ -94,10 +85,7 @@ function makeMsgs (searchWords, allProgramList) {
 
 /**
  * text の長さが length 以上のときは省略する
- * @param {string} text
- * @param {number} length
- * @return {string}
  */
-function abbrText(text, length) {
+function abbrText(text: string, length: number): string {
   return text.length >= length ? `${text.substring(0, length - 1)}…` : text;
 }
