@@ -1,18 +1,16 @@
 import axios from 'axios';
 import { JSDOM } from 'jsdom';
 import moment from 'moment';
+import 'moment-timezone'
 import { Program, ParsedDate } from './types'
 import { NGWordsList } from './store';
 
 /**
  * searchWords に合致するテレビ番組の情報を取得
- * @param {string} searchWords
- * @param {string} type
- * @param {string} start
- * @return {Primise<?Program[]>}
  */
 export default function (searchWords: string, type = '1+2+3', start = '1'): Promise<Program[]> {
   return new Promise<Program[]>((resolve: (value: Program[]) => void, reject: (reason: []) => void) => {
+    moment.tz.setDefault('Asia/Tokyo');
     const url = `https://tv.yahoo.co.jp/search/?q=${searchWords}&t=${type}&s=${start}`;
     const tomorrow = Number(moment().add(1, 'd').format('MDD'));
     const programList: Program[] = [];
@@ -28,7 +26,7 @@ export default function (searchWords: string, type = '1+2+3', start = '1'): Prom
         if (leftarea) {
           let [date, time] = leftarea.trim().split('\n');
           let parsedDate = parseDate(date, time);
-          if (parsedDate.mdd < tomorrow) break;
+          if (parsedDate.mdd > tomorrow) break;
 
           let name = rightareas[0].textContent;
           if (name === null) continue;
