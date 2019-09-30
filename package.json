@@ -19,6 +19,7 @@
     "axios": "^0.19.0",
     "babel-loader": "^8.0.6",
     "bufferutil": "^4.0.1",
+    "canvas": "^2.6.0",
     "dotenv": "^8.1.0",
     "jsdom": "^15.1.1",
     "moment": "^2.24.0",

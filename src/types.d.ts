@@ -1,11 +1,14 @@
+import * as line from '@line/bot-sdk';
+
 export interface Program {
-  date: string | null;
-  time: string | null;
-  name: string | null;
-  calendarUrl: string | null;
-  href: string | null;
-  broadcaster: string | null;
-  detail: string | null;
+  date: string;
+  time: string;
+  name: string;
+  calendarUrl: string;
+  href: string;
+  broadcaster: string;
+  detail: string;
+  [index: string]: string;
 }
 
 export interface NGWords {
@@ -23,41 +26,5 @@ export interface ParsedDate {
 
 export interface MyResponse {
   statusCode: number;
-  response: {};
-}
-
-/**
- * @todo null check
- */
-export type Actions = [
-  {
-    type: 'uri';
-    label: 'Googleカレンダーに追加';
-    uri: string | null;
-  },
-  {
-    type: 'uri';
-    label: '詳細';
-    uri: string | null;
-  }
-];
-
-/**
- * @todo null check
- */
-export interface Columns {
-  title: string | null;
-  text: string | null;
-  actions: Actions;
-}
-
-export interface Carousel {
-  type: 'template';
-  altText: string;
-  template: {
-    type: 'carousel';
-    columns: Columns[];
-    imageAspectRatio: 'rectangle';
-    imageSize: 'cover';
-  }
+  response: line.MessageAPIResponseBase;
 }

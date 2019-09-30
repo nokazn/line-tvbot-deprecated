@@ -1,4 +1,4 @@
-import { NGWords, SearchWord } from './types.d';
+import { NGWords, SearchWord } from './types';
 
 export const NGWordsList: NGWords[] = [
   {

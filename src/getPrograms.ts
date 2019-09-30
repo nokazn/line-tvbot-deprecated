@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { JSDOM } from 'jsdom';
 import moment from 'moment';
-import { Program, ParsedDate } from './types.d'
-import { NGWordsList } from './store.js';
+import { Program, ParsedDate } from './types'
+import { NGWordsList } from './store';
 
 /**
  * searchWords に合致するテレビ番組の情報を取得
@@ -31,13 +31,19 @@ export default function (searchWords: string, type = '1+2+3', start = '1'): Prom
           if (parsedDate.mdd < tomorrow) break;
 
           let name = rightareas[0].textContent;
-          let calendarUrl = name ? `https://calendar.google.com/calendar/event?action=TEMPLATE&text=${encodeURIComponent(name)}&dates=${encodeURIComponent(parsedDate.calendarTime)}`: null;
+          if (name === null) continue;
+          let calendarUrl = `https://calendar.google.com/calendar/event?action=TEMPLATE&text=${encodeURIComponent(name)}&dates=${encodeURIComponent(parsedDate.calendarTime)}`;
 
           let a = rightareas[0].querySelector('a');
-          let href = a ? `https://tv.yahoo.co.jp/${a.href}` : null;
+          if (a === null) continue;
+          let href = `https://tv.yahoo.co.jp/${a.href}`;
 
           let broadcaster = rightareas[1].children[0].textContent;
+          if (broadcaster === null) continue;
+
           let detail = rightareas[2].textContent;
+          if (detail === null) continue;
+
           obj = { date, time, name, calendarUrl, href, broadcaster, detail };
           if (!_isNGPrograms(obj)) programList.push(obj);
         } else {
@@ -92,9 +98,7 @@ function parseDate (date: string, times: string): ParsedDate {
 function _isNGPrograms (obj: Program): boolean {
   for (let NGWords of NGWordsList) {
     let hasNGWords = Object.entries(NGWords).every(([key, wordList]: [string, string[]]) => {
-      return wordList.every((word: string) => {
-        if (typeof obj[key] === 'string') obj[key].includes(word);
-      });
+      return wordList.every((word: string) => obj[key].includes(word));
     });
     if (hasNGWords) return true;
   }

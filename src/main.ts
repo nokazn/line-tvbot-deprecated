@@ -1,25 +1,30 @@
 import { searchWordsList } from './store';
 import sleep from './sleep';
-import pushMessage from './push.js';
-import searchPrograms from './searchPrograms.js';
-import { MyResponse } from './types.d';
+import pushMessage from './push';
+import searchPrograms from './searchPrograms';
 
 // @ts-ignore
-exports.handler = async (event, context, callback) => {
+exports.handler = async (event, context, callback): void => {
   for (let searchWords of searchWordsList) {
-    await notifyPrograms(...searchWords);
-    await sleep(1000);
+    try {
+      await notifyPrograms(...searchWords);
+    } catch (e) {
+      console.error(e);
+    }
+    await sleep(1500);
   }
 };
 
+exports.handler();
+
 /**
  * 検索した番組を通知
- * @todo Response???
  */
-async function notifyPrograms (searchWords: string, type: number): Promise<MyResponse | null> {
-  const allProgramList = await searchPrograms(searchWords, type);
-  if (!allProgramList.length) return null;
-  const response = await pushMessage({ searchWords, allProgramList });
-  console.info({ allProgramList, response });
-  return response;
+async function notifyPrograms (searchWords: string, type: number): Promise<void> {
+  searchPrograms(searchWords, type).then(allProgramList => {
+    console.info({ searchWords, allProgramList });
+    if (allProgramList.length) pushMessage({ searchWords, allProgramList });
+  }).catch(e => {
+    console.error(e)
+  });
 }
