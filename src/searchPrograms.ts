@@ -10,7 +10,7 @@ export default async function (searchWords: string, typeNum: number): Promise<Pr
   searchWords = searchWords.split(/\s/g).map(word => encodeURIComponent(word)).join('+');
   const type = String(typeNum).split('').join('+');
   const allProgramList: Program[] = [];
-  loop: while (allProgramList.length < max) {
+  while (allProgramList.length < max) {
     let start = String(allProgramList.length + 1);
     let programs: Program[] = [];
     try {
@@ -19,7 +19,7 @@ export default async function (searchWords: string, typeNum: number): Promise<Pr
       console.error(e);
     }
     allProgramList.push(...programs);
-    if (programs.length < 10) break loop;
+    if (programs.length < 10) break;
     await sleep(1500);
   }
   return allProgramList;

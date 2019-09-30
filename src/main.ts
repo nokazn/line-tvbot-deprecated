@@ -15,8 +15,6 @@ exports.handler = async (event, context, callback): void => {
   }
 };
 
-exports.handler();
-
 /**
  * 検索した番組を通知
  */
