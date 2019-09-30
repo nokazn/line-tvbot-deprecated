@@ -5,8 +5,8 @@ module.exports = {
   mode: 'development',
   entry: './src/main.ts',
   output: {
-    path: path.resolve(__dirname),
-    filename: './dist/index.js',
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'index.js',
     libraryTarget: 'umd'
   },
   module: {
@@ -14,13 +14,17 @@ module.exports = {
       {
         test: /\.ts$/,
         loader: 'ts-loader'
+      },
+      {
+        test: /\.node$/,
+        use: 'node-loader'
       }
     ]
   },
   resolve: {
-    extensions: ['.ts']
+    extensions: ['.ts', '.js', 'node']
   },
-  externals: {
-    canvas: 'commonjs canvas'
-  },
+  // externals: {
+  //   canvas: 'commonjs canvas'
+  // },
 }
